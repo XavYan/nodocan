@@ -60,7 +60,7 @@ Consulta [SALARY_AUDIT.md](SALARY_AUDIT.md) para ver los cambios, fuentes, clasi
 ```bash
 npm ci
 npm test -- --watch=false
-npm run build -- --base-href /TeacherSalaryCalculator/
+npm run build -- --base-href /nodocan/
 ```
 
 ## Exportar simulaciones
@@ -73,4 +73,4 @@ Las fechas de inicio y fin de contrato calculan las extras de todos los semestre
 
 Los recursos de marca están en `public/brand`: SVG trazados y fuentes WOFF2 con sus licencias OFL. La web y los PDF usan la misma paleta. El PDF incorpora subconjuntos latinos de las fuentes en `src/app/services/pdf-fonts`; sus licencias se incluyen junto al código. Los números de la interfaz se muestran en formato español.
 
-La aplicación se publica en https://xavyan.github.io/TeacherSalaryCalculator/. El nombre público es NODOCAN; la clave interna de Angular y la carpeta `dist/nomina-docente/browser` se conservan para el flujo existente de GitHub Pages. La telemetría de Angular está desactivada.
+La aplicación se publica en https://xavyan.github.io/nodocan/. El nombre público es NODOCAN; la clave interna de Angular y la carpeta `dist/nomina-docente/browser` se conservan para el flujo existente de GitHub Pages. La telemetría de Angular está desactivada.

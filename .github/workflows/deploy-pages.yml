@@ -35,7 +35,7 @@ jobs:
         run: npm test -- --watch=false
 
       - name: Build Angular app
-        run: npm run build -- --base-href /TeacherSalaryCalculator/
+        run: npm run build -- --base-href /nodocan/
 
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v4
