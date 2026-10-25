@@ -51,11 +51,16 @@ export function buildPayrollPdf(doc: jsPDF, r: PayrollResult): jsPDF {
     doc.setFont('Body', bold ? 'bold' : 'normal'); doc.setFontSize(10.5);
     const labels: string[] = doc.splitTextToSize(clean(label), 119);
     const values: string[] = doc.splitTextToSize(clean(value), 47);
-    const height = Math.max(labels.length, values.length) * 5.25 + 3;
+    const lineHeight = 5.25;
+    const height = Math.max(labels.length, values.length) * lineHeight + 3;
     space(height);
     doc.setFont('Body', bold ? 'bold' : 'normal'); doc.setFontSize(10.5);
-    text(labels.join('\n'), left + 2, y);
-    text(values.join('\n'), right - 2, y, { align: 'right' });
+    // Each column is centered independently, including rows with wrapped text.
+    // The cursor leaves 3 mm after the bottom rule for notes and section headings.
+    const center = y - 3 + height / 2;
+    const options = { baseline: 'middle' as const, lineHeightFactor: lineHeight * doc.internal.scaleFactor / 10.5 };
+    text(labels.join('\n'), left + 2, center - (labels.length - 1) * lineHeight / 2, options);
+    text(values.join('\n'), right - 2, center - (values.length - 1) * lineHeight / 2, { ...options, align: 'right' });
     y += height;
     doc.setLineWidth(.2); doc.setDrawColor(216, 225, 230); doc.line(left, y - 3, right, y - 3);
   };

@@ -115,7 +115,7 @@ a { text-underline-offset: .18em; }
 .nd-result-heading { margin-bottom: 24px; }
 .nd-result-heading h2 { font-size: 1.5rem; }
 .nd-result .nd-result-shell { border: 0 !important; background: transparent !important; }
-.nd-result .card { background: #fff; border: 1px solid var(--nd-line) !important; }
+.nd-result .card:not(.nd-result-shell) { background: #fff; border: 1px solid var(--nd-line) !important; }
 .nd-net-summary { margin-inline: 0; padding: 32px; background: var(--nd-navy); color: #fff; border-radius: 16px; }
 .nd-net-summary > .col-12 { padding: 0; }
 .nd-net-summary .text-muted { color: #d6e4eb !important; }
