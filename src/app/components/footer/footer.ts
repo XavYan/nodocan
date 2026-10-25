@@ -4,22 +4,18 @@ import { Component } from '@angular/core';
   selector: 'app-footer',
   imports: [],
   template: `
-    <footer class="bg-dark text-white text-center py-4 mt-5">
-      <div class="container">
-        <p class="mb-2">&copy; 2026 Nómina Docente. Todos los derechos reservados.</p>
-        <p class="mb-2 small">
-          <a href="https://www.stec.es/stec/archivos_subidos/gal_descargas/2/_214.pdf" target="_blank" rel="noopener" class="text-info text-decoration-none">
-            <i class="bi bi-file-earmark-pdf me-1"></i> Fuente: Guía de retribuciones STEC-IC (febrero 2026)
-          </a>
-        </p>
-        <small class="text-secondary">Diseñado con <i class="bi bi-heart-fill text-danger"></i> para educadores</small>
+    <footer class="nd-site-footer">
+      <div class="nd-container nd-footer-inner">
+        <a href="#calculadora" class="nd-brand-link" aria-label="NODOCAN, volver a la calculadora">
+          <img src="brand/logos/nodocan-horizontal-reverse-descriptor.svg" alt="NODOCAN · Nómina Docente Canarias" width="280" height="58" loading="lazy">
+        </a>
+        <div class="nd-footer-copy">
+          <p>Una herramienta independiente para entender tu nómina docente.</p>
+          <a href="https://www.stec.es/stec/archivos_subidos/gal_descargas/2/_214.pdf" target="_blank" rel="noopener noreferrer">Fuente: guía STEC-IC · febrero de 2026<span class="visually-hidden"> (abre en otra pestaña)</span></a>
+          <p class="nd-copyright">&copy; 2026 NODOCAN · Simulación informativa</p>
+        </div>
       </div>
     </footer>
-  `,
-  styles: `
-    footer {
-      width: 100%;
-    }
   `,
 })
 export class Footer {}

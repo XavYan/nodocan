@@ -27,10 +27,13 @@ describe('Exportación de la simulación a PDF', () => {
     expect(written).toContain('694,24');
     expect(written).toContain('125 km');
     expect(written).toContain('Neto ordinario mensual');
+    expect(written).toContain('NODOCAN');
+    expect(doc.getFontList()).toHaveProperty('Heading');
+    expect(doc.getFontList()).toHaveProperty('Body');
     expect(written).not.toContain('Mes completo (30 días retribuidos)');
     expect(written).toContain('Clases Pasivas');
     expect(JSON.stringify(result)).toBe(before);
-    expect(payrollPdfFilename(result)).toBe('simulacion-nomina-2026-10.pdf');
+    expect(payrollPdfFilename(result)).toBe('nodocan-simulacion-2026-10.pdf');
   });
   it('exporta ambas pagas con sus porcentajes calculados y las fechas del contrato', () => {
     const result = new PayrollService().calculatePayroll({ ...exampleInput, fechaInicioContrato:'2026-09-15', fechaFinContrato:'2027-08-15', mostrarMesCompleto:true });

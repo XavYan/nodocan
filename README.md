@@ -1,4 +1,4 @@
-# Calculadora de Nómina Docente (Canarias 2026) 🎓💰
+# NODOCAN · Nómina Docente Canarias
 
 Esta aplicación es una herramienta avanzada diseñada para que el personal docente de la Comunidad Autónoma de Canarias pueda calcular su salario neto como estimación transparente con las tablas de **2026**.
 
@@ -19,12 +19,12 @@ La información salarial y los componentes de la nómina se basan en las tablas 
   - Desglose de cuotas obreras de la Seguridad Social (Contingencias Comunes, Desempleo y FP).
   - Simulación de retención de IRPF personalizada.
 - **Reducción por Compatibilidad**: Aplicación proporcional del importe de reducción autorizado en la resolución individual.
-- **Interfaz Moderna**: Diseño premium basado en Angular (Standalone, Signals) con Bootstrap 5 y animaciones fluidas.
+- **Identidad NODOCAN**: Manrope para títulos, Source Sans 3 para lectura y cifras, azul profundo, turquesa y acento dorado. Fuentes locales y diseño adaptable.
 
 ## 🛠️ Tecnologías Utilizadas
 
 - **Core**: Angular 21 (Signals, Standalone Components).
-- **Estilos**: Bootstrap 5, Bootstrap Icons, Animate.css.
+- **Estilos**: Bootstrap 5, Bootstrap Icons y estilos de NODOCAN.
 - **Datos**: JSON data-driven architecture para salarios y complementos.
 
 ## 💻 Desarrollo
@@ -65,6 +65,12 @@ npm run build -- --base-href /TeacherSalaryCalculator/
 
 ## Exportar simulaciones
 
-Después de calcular, pulsa **Descargar simulación en PDF** en el resultado. El documento incluye los parámetros, devengos, bases, deducciones, neto ordinario y extra de la última simulación calculada. Se genera en el navegador con texto seleccionable, fuentes incorporadas y paginación automática. El generador se carga al pulsar el botón.
+Después de calcular, pulsa **Descargar PDF** en el resultado. El documento incluye los parámetros, devengos, bases, deducciones, neto ordinario, todas las extras del contrato, vacaciones pendientes, liquidación y totales anuales de la última simulación calculada. Se genera en el navegador con texto seleccionable, fuentes incorporadas y paginación automática. El generador se carga al pulsar el botón.
 
-Las fechas de inicio y fin de contrato calculan por separado las extras de junio y diciembre del año de simulación, con su periodo y porcentaje de devengo. La fecha de fin se incluye en el cómputo. El IRPF inicial es del 20%, editable.
+Las fechas de inicio y fin de contrato calculan las extras de todos los semestres que se solapan con el contrato, con su año, periodo y porcentaje de devengo. La fecha de fin se incluye en el cómputo. El IRPF inicial es del 20%, editable.
+
+## Identidad visual
+
+Los recursos de marca están en `public/brand`: SVG trazados y fuentes WOFF2 con sus licencias OFL. La web y los PDF usan la misma paleta. El PDF incorpora subconjuntos latinos de las fuentes en `src/app/services/pdf-fonts`; sus licencias se incluyen junto al código. Los números de la interfaz se muestran en formato español.
+
+La aplicación se publica en https://xavyan.github.io/TeacherSalaryCalculator/. El nombre público es NODOCAN; la clave interna de Angular y la carpeta `dist/nomina-docente/browser` se conservan para el flujo existente de GitHub Pages. La telemetría de Angular está desactivada.

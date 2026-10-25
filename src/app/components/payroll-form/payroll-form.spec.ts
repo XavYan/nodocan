@@ -24,6 +24,17 @@ describe('Selección del equipo directivo', () => {
     expect(form.payrollForm.value.mostrarMesCompleto).toBe(true);
     expect(form.payrollForm.value.horasSemanales).toBe(18);
   });
+  it('emite un mes numérico al cambiar el selector en el navegador', async () => {
+    const fixture = await setup(), form = fixture.componentInstance;
+    form.payrollForm.patchValue({ cuerpo:'Secundaria', isla:'Tenerife', fechaInicioContrato:'2026-09-01', fechaFinContrato:'2027-08-15' });
+    fixture.detectChanges();
+    const select = fixture.nativeElement.querySelector('#mes') as HTMLSelectElement;
+    select.selectedIndex = 5; select.dispatchEvent(new Event('change')); fixture.detectChanges();
+    let month: unknown;
+    form.calculate.subscribe(input => month = input.mes);
+    form.onSubmit();
+    expect(month).toBe(6);
+  });
   it('rechaza contratos con fin anterior al inicio', async () => {
     const form = (await setup()).componentInstance;
     let emits = 0; form.calculate.subscribe(()=>emits++);

@@ -7,24 +7,25 @@ import { PayrollResult } from '../../models/payroll.model';
   standalone: true,
   imports: [CommonModule],
   template: `
-    <div *ngIf="result" class="mt-5 animate__animated animate__fadeIn">
-      <div class="card border-0 bg-light rounded-4 overflow-hidden">
-        <div class="card-header bg-dark text-white p-3 text-center border-0">
-          <h4 class="mb-0">Resumen de la Nómina</h4>
+    <section *ngIf="result" id="resultado" class="nd-result" aria-label="Resultado de la simulación">
+      <div class="card border-0 nd-result-shell">
+        <div class="nd-result-heading">
+          <p class="nd-eyebrow">Tu simulación</p><h2 class="mb-0">Resumen de la nómina</h2>
         </div>
-        <div class="card-body p-4">
+        <div class="card-body nd-result-body">
           <div class="d-flex justify-content-center mb-3">
             <button type="button" class="btn btn-outline-primary" (click)="downloadPdf()" [disabled]="generatingPdf()" [attr.aria-busy]="generatingPdf()">
-              <i class="bi bi-file-earmark-pdf me-2" aria-hidden="true"></i>{{ generatingPdf() ? 'Generando PDF…' : 'Descargar simulación en PDF' }}
+              <i class="bi bi-file-earmark-pdf me-2" aria-hidden="true"></i>{{ generatingPdf() ? 'Generando PDF…' : 'Descargar PDF' }}
             </button>
           </div>
           <div *ngIf="pdfError()" class="alert alert-danger" role="alert">{{ pdfError() }}</div>
-          <div class="row text-center mb-4">
+          <div class="row text-center mb-4 nd-net-summary">
             <div class="col-12">
-              <span class="text-muted text-uppercase small fw-bold">Salario Neto Mensual</span>
-              <h2 class="display-4 text-success fw-bold mb-0">{{ result.salarioNeto | currency:'EUR' }}</h2>
-              <div *ngFor="let extra of result.pagasExtra" class="mt-2 text-muted animate__animated animate__fadeIn">
-                <span class="x-small text-uppercase fw-bold">Extra de {{ extra.nombre }} {{ extra.anio }} ({{ extra.porcentajeDevengo | number:'1.0-2' }}%):</span>
+              <span class="text-muted text-uppercase small fw-bold">Neto estimado del mes</span>
+              <h2 class="nd-net-amount mb-0">{{ result.salarioNeto | currency:'EUR' }}</h2>
+              <p class="nd-net-note">Nómina ordinaria, sin sumar pagas extras.</p>
+              <div *ngFor="let extra of result.pagasExtra" class="nd-extra-summary">
+                <span class="fw-semibold">Extra de {{ extra.nombre }} {{ extra.anio }} ({{ extra.porcentajeDevengo | number:'1.0-2' }}%):</span>
                 <span class="ms-2 fw-medium text-primary">{{ extra.pagaExtraNeta | currency:'EUR' }}</span>
               </div>
             </div>
@@ -63,7 +64,7 @@ import { PayrollResult } from '../../models/payroll.model';
           </div>
 
           <ng-container *ngTemplateOutlet="nomina; context: { $implicit: result }"></ng-container>
-          <section *ngIf="result.mesCompleto as completo" class="mt-4" aria-label="Mes completo">
+          <section *ngIf="result.mesCompleto as completo" class="mt-4 nd-result-section" aria-label="Mes completo">
             <h4>Mes completo (30 días retribuidos)</h4>
             <p class="small text-muted">Misma jornada de {{ result.input.horasSemanales }} horas lectivas semanales. Nómina ordinaria, sin pagas extras. Las unidades variables y los días de compatibilidad se proyectan al ritmo del mes indicado.</p>
             <p class="h3 text-success">Neto: {{ completo.salarioNeto | currency:'EUR' }}</p>
@@ -182,7 +183,7 @@ import { PayrollResult } from '../../models/payroll.model';
           <!-- Información Paga Extra -->
           <div *ngFor="let extra of result.pagasExtra" class="mt-4 card border-0 bg-white shadow-sm overflow-hidden">
             <div class="card-header bg-primary text-white py-2 px-3 border-0">
-              <span class="small fw-bold text-uppercase">Paga Extra de {{ extra.nombre }} {{ extra.anio }} (Estimada)</span>
+              <span class="fw-semibold">Paga Extra de {{ extra.nombre }} {{ extra.anio }} (Estimada)</span>
             </div>
             <div class="card-body p-0">
               <div class="p-3 bg-light border-bottom small">
@@ -280,7 +281,7 @@ import { PayrollResult } from '../../models/payroll.model';
               <p class="fw-bold mt-3 mb-0">Neto última nómina + liquidación adicional: {{ result.liquidacion.ultimaNomina.salarioNeto + result.liquidacion.total.neto | currency:'EUR' }}</p>
             </div>
           </section>
-          <section class="mt-4" aria-label="Totales anuales del contrato">
+          <section class="mt-4 nd-result-section" aria-label="Totales anuales del contrato">
             <h4>Totales por año del contrato</h4>
             <p class="small text-muted">Proyección con tablas, cotizaciones, IRPF, antigüedad y jornada constantes de 2026. Mes completo = 30 días; meses parciales según las fechas de contrato (máximo 30). Kilómetros, horas complementarias y compatibilidad se repiten al ritmo diario del mes indicado. Las vacaciones pendientes se atribuyen al año de cese.</p>
             <div class="table-responsive">
@@ -302,18 +303,10 @@ import { PayrollResult } from '../../models/payroll.model';
           </div>
         </div>
       </div>
-    </div>
+    </section>
   `,
-  styles: `
-    .animate__fadeIn {
-      animation: fadeIn 0.6s ease-out;
-    }
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(20px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-    .x-small { font-size: 0.75rem; }
-  `
+  styles: `:host { display: block; }`
+
 })
 export class PayrollResultComponent {
   @Input() result?: PayrollResult;

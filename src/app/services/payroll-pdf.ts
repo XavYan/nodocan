@@ -1,5 +1,5 @@
 import type { jsPDF } from 'jspdf';
-import { regular, bold } from './pdf-fonts/fonts';
+import { regular, bold, heading } from './pdf-fonts/nodocan-fonts';
 import type { PayrollResult, PayrollMonth, ContractTotals } from '../models/payroll.model';
 import complementos from '../../assets/data/complementos.json';
 
@@ -8,52 +8,65 @@ const clean = (value: string) => value.replace(/[\u2010-\u2015]/g, '-').replace(
 const dateLabel = (value: string) => value.split('-').reverse().join('/');
 const percent = (value: number) => new Intl.NumberFormat('es-ES', { maximumFractionDigits: 2 }).format(value);
 const euro = (value: number) => clean(new Intl.NumberFormat('es-ES', { style: 'currency', currency: 'EUR' }).format(value));
-export const payrollPdfFilename = (r: PayrollResult) => `simulacion-nomina-${r.input.anio}-${String(r.input.mes).padStart(2, '0')}.pdf`;
+export const payrollPdfFilename = (r: PayrollResult) => `nodocan-simulacion-${r.input.anio}-${String(r.input.mes).padStart(2, '0')}.pdf`;
 
 /** Writes an immutable calculated snapshot, never the current (possibly edited) form. */
 export function buildPayrollPdf(doc: jsPDF, r: PayrollResult): jsPDF {
-  doc.addFileToVFS('DejaVuSans.ttf', regular);
-  doc.addFont('DejaVuSans.ttf', 'DejaVuSans', 'normal');
-  doc.addFileToVFS('DejaVuSans-Bold.ttf', bold);
-  doc.addFont('DejaVuSans-Bold.ttf', 'DejaVuSans', 'bold');
+  doc.addFileToVFS('SourceSans3-Regular.ttf', regular);
+  doc.addFont('SourceSans3-Regular.ttf', 'Body', 'normal');
+  doc.addFileToVFS('SourceSans3-Bold.ttf', bold);
+  doc.addFont('SourceSans3-Bold.ttf', 'Body', 'bold');
+  doc.addFileToVFS('Manrope-Bold.ttf', heading);
+  doc.addFont('Manrope-Bold.ttf', 'Heading', 'normal');
   const input = r.input;
   const left = 18, right = 192, bottom = 273;
   let y = 0;
   const text = (value: string, x: number, at: number, options = {}) => doc.text(clean(value), x, at, options);
   const header = () => {
-    doc.setFillColor(22, 57, 91); doc.rect(0, 0, 210, 31, 'F');
-    doc.setTextColor(255, 255, 255); doc.setFont('DejaVuSans', 'bold'); doc.setFontSize(16);
-    text('Simulación de nómina docente', left, 14);
-    doc.setFont('DejaVuSans', 'normal'); doc.setFontSize(10);
-    text(`Canarias 2026 | ${meses[input.mes - 1]} ${input.anio}`, left, 23);
-    doc.setTextColor(35, 45, 55); y = 41;
+    doc.setFillColor(18, 46, 69); doc.rect(0, 0, 210, 38, 'F');
+    // Vector version of the NODOCAN symbol, matching the SVG brand assets.
+    doc.setFillColor(255, 255, 255); doc.roundedRect(left, 8, 12, 12, 2.67, 2.67, 'F');
+    doc.setDrawColor(18, 46, 69); doc.setLineWidth(1); doc.setLineCap('round'); doc.setLineJoin('round');
+    doc.line(left + 3.5, 16.67, left + 3.5, 11.33);
+    doc.line(left + 3.5, 11.33, left + 8.5, 16.67);
+    doc.line(left + 8.5, 16.67, left + 8.5, 11.33);
+    doc.setFillColor(18, 46, 69); doc.circle(left + 3.5, 11.33, .78, 'F'); doc.circle(left + 8.5, 16.67, .78, 'F');
+    doc.setTextColor(255, 255, 255); doc.setFont('Heading', 'normal'); doc.setFontSize(19);
+    doc.setCharSpace(.24); text('NODOCAN', left + 15, 15.5); doc.setCharSpace(0);
+    doc.setFont('Body', 'normal'); doc.setFontSize(9);
+    text('Nómina Docente Canarias', left + 15, 20.5);
+    doc.setFontSize(10.5); text(`Simulación de nómina | ${meses[input.mes - 1]} ${input.anio}`, left, 30);
+    doc.setFillColor(232, 180, 77); doc.rect(right - 22, 28.5, 22, 1, 'F');
+    doc.setTextColor(34, 56, 74); y = 49;
   };
   const space = (height: number) => { if (y + height > bottom) { doc.addPage(); header(); } };
-  const section = (title: string, minimum = 23) => {
-    space(minimum); y += 3;
-    doc.setFillColor(231, 239, 247); doc.rect(left, y - 5, right - left, 9, 'F');
-    doc.setFont('DejaVuSans', 'bold'); doc.setFontSize(10); text(title, left + 3, y + 1); y += 10;
+  const section = (title: string, minimum = 26) => {
+    space(minimum); y += 4;
+    doc.setFillColor(230, 243, 242); doc.rect(left, y - 6, right - left, 12, 'F');
+    doc.setFont('Heading', 'normal'); doc.setFontSize(14); doc.setTextColor(18, 46, 69);
+    text(title, left + 3, y + 1.5); y += 14;
+    doc.setTextColor(34, 56, 74);
   };
   const row = (label: string, value: string, bold = false) => {
-    doc.setFont('DejaVuSans', bold ? 'bold' : 'normal'); doc.setFontSize(9);
+    doc.setFont('Body', bold ? 'bold' : 'normal'); doc.setFontSize(10.5);
     const labels: string[] = doc.splitTextToSize(clean(label), 119);
     const values: string[] = doc.splitTextToSize(clean(value), 47);
-    const height = Math.max(labels.length, values.length) * 4.5 + 3;
+    const height = Math.max(labels.length, values.length) * 5.25 + 3;
     space(height);
-    doc.setFont('DejaVuSans', bold ? 'bold' : 'normal'); doc.setFontSize(9);
+    doc.setFont('Body', bold ? 'bold' : 'normal'); doc.setFontSize(10.5);
     text(labels.join('\n'), left + 2, y);
     text(values.join('\n'), right - 2, y, { align: 'right' });
     y += height;
-    doc.setDrawColor(224, 230, 235); doc.line(left, y - 3, right, y - 3);
+    doc.setLineWidth(.2); doc.setDrawColor(216, 225, 230); doc.line(left, y - 3, right, y - 3);
   };
   const amount = (label: string, value: number, bold = false) => row(label, euro(value === 0 ? 0 : value), bold);
   const paragraph = (value: string) => {
-    doc.setFont('DejaVuSans', 'normal'); doc.setFontSize(8.5);
+    doc.setFont('Body', 'normal'); doc.setFontSize(9);
     const lines: string[] = doc.splitTextToSize(clean(value), right - left - 4);
-    for (const line of lines) { space(4.3); doc.setFont('DejaVuSans', 'normal'); doc.setFontSize(8.5); text(line, left + 2, y); y += 4.3; }
+    for (const line of lines) { space(4.5); doc.setFont('Body', 'normal'); doc.setFontSize(9); text(line, left + 2, y); y += 4.5; }
     y += 3;
   };
-  doc.setProperties({ title: `Simulación de nómina - ${meses[input.mes - 1]} ${input.anio}`, subject: 'Estimación de retribuciones docentes de Canarias', author: 'Calculadora de Nómina Docente' });
+  doc.setProperties({ title: `NODOCAN - Simulación de nómina - ${meses[input.mes - 1]} ${input.anio}`, subject: 'Estimación de retribuciones docentes de Canarias', author: 'NODOCAN · Nómina Docente Canarias' });
   header();
   section('Resumen');
   amount('Bruto ordinario', r.totalDevengado);
@@ -162,7 +175,7 @@ export function buildPayrollPdf(doc: jsPDF, r: PayrollResult): jsPDF {
   section('Totales por año del contrato',45);
   paragraph('Proyección con tablas, cotizaciones, IRPF, antigüedad y jornada constantes de 2026, sin subidas futuras. Mes completo = 30 días; meses parciales según fechas (máximo 30). Unidades variables y compatibilidad se repiten al ritmo diario del mes indicado. Vacaciones pendientes atribuidas al año del cese.');
   for (const annual of r.totalesAnuales) {
-    section(`Total del año ${annual.anio}`,75);
+    section(`Total del año ${annual.anio}`,85);
     amount('Bruto de nóminas ordinarias',annual.brutoNominas);
     amount('Bruto de pagas extraordinarias',annual.brutoExtras);
     amount('Bruto de vacaciones pendientes',annual.brutoVacaciones);
@@ -180,9 +193,9 @@ export function buildPayrollPdf(doc: jsPDF, r: PayrollResult): jsPDF {
   paragraph(source);
   const pages = doc.getNumberOfPages();
   for (let n = 1; n <= pages; n++) {
-    doc.setPage(n); doc.setFont('DejaVuSans', 'normal'); doc.setFontSize(8); doc.setTextColor(90, 105, 120);
-    doc.setDrawColor(210, 220, 230); doc.line(left, 282, right, 282);
-    text('Calculadora de Nómina Docente | Simulación informativa', left, 288);
+    doc.setPage(n); doc.setFont('Body', 'normal'); doc.setFontSize(9); doc.setTextColor(82, 103, 118);
+    doc.setLineWidth(.2); doc.setDrawColor(216, 225, 230); doc.line(left, 282, right, 282);
+    text('NODOCAN | Simulación informativa', left, 288);
     text(`${n} / ${pages}`, right, 288, { align: 'right' });
   }
   return doc;

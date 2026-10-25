@@ -37,24 +37,25 @@ interface SalaryData {
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule],
   template: `
-    <form [formGroup]="payrollForm" (ngSubmit)="onSubmit()" class="row g-4">
-      <div class="col-12 small alert alert-info">
+    <form [formGroup]="payrollForm" (ngSubmit)="onSubmit()" class="row g-4 nd-payroll-form">
+      <div class="col-12 nd-source-note">
         Tablas STEC-IC de febrero de 2026. Importes brutos contrastados con la guía.
         <a href="https://www.stec.es/stec/archivos_subidos/gal_descargas/2/_214.pdf" target="_blank" rel="noopener">Consultar PDF</a>.
         Las proyecciones de todo el contrato mantienen los importes y tipos de 2026; no incluyen subidas futuras ni atrasos.
       </div>
+      <div class="col-12 nd-form-section"><h2><span aria-hidden="true">01</span>Datos de tu nómina</h2><p>Selecciona tu cuerpo, isla y las condiciones del mes que quieres calcular.</p></div>
       <!-- Cuerpo e Isla -->
       <div class="col-md-6">
-        <label class="form-label fw-bold">Cuerpo</label>
-        <select formControlName="cuerpo" (change)="onCuerpoChange()" class="form-select shadow-sm">
+        <label for="cuerpo" class="form-label fw-bold">Cuerpo</label>
+        <select id="cuerpo" formControlName="cuerpo" (change)="onCuerpoChange()" class="form-select shadow-sm">
           <option value="" disabled>Seleccione un cuerpo...</option>
           <option *ngFor="let s of salarios" [value]="s.cuerpo">{{ s.cuerpo }}</option>
         </select>
       </div>
 
       <div class="col-md-6">
-        <label class="form-label fw-bold">Isla</label>
-        <select formControlName="isla" class="form-select shadow-sm">
+        <label for="isla" class="form-label fw-bold">Isla</label>
+        <select id="isla" formControlName="isla" class="form-select shadow-sm">
           <option value="" disabled>Seleccione una isla...</option>
           <optgroup label="Islas Capitalinas">
             <option value="Gran Canaria">Gran Canaria</option>
@@ -73,9 +74,9 @@ interface SalaryData {
       <!-- Tabla de información salarial -->
       <div class="col-12" *ngIf="selectedSalary()">
         <div class="mt-2 animate__animated animate__fadeIn">
-          <div class="table-responsive rounded-3 shadow-sm border overflow-hidden">
+          <div class="table-responsive rounded-3 border">
             <table class="table table-sm table-hover bg-white mb-0">
-              <thead class="table-primary text-white border-0">
+              <thead class="table-primary border-0">
                 <tr class="small text-center">
                   <th class="py-2">Sueldo Base</th>
                   <th class="py-2">Trienios</th>
@@ -111,21 +112,21 @@ interface SalaryData {
 
       <!-- Fecha de la Nómina -->
       <div class="col-md-6">
-        <label class="form-label fw-bold">Mes</label>
-        <select formControlName="mes" class="form-select shadow-sm">
-          <option *ngFor="let m of meses; let i = index" [value]="i + 1">{{ m }}</option>
+        <label for="mes" class="form-label fw-bold">Mes</label>
+        <select id="mes" formControlName="mes" class="form-select shadow-sm">
+          <option *ngFor="let m of meses; let i = index" [ngValue]="i + 1">{{ m }}</option>
         </select>
       </div>
 
       <div class="col-md-6">
-        <label class="form-label fw-bold">Año</label>
-        <input type="number" formControlName="anio" class="form-control shadow-sm" min="2026" max="2026" readonly>
+        <label for="anio" class="form-label fw-bold">Año</label>
+        <input type="number" id="anio" formControlName="anio" class="form-control shadow-sm" min="2026" max="2026" readonly>
       </div>
 
       <!-- Parámetros de Trabajo -->
       <div class="col-md-6">
-        <label class="form-label fw-bold">Días trabajados (máximo 30 días)</label>
-        <input type="number" formControlName="diasTrabajados" class="form-control shadow-sm" placeholder="Ej: 30">
+        <label for="diasTrabajados" class="form-label fw-bold">Días trabajados (máximo 30 días)</label>
+        <input type="number" id="diasTrabajados" formControlName="diasTrabajados" class="form-control shadow-sm" placeholder="Ej: 30">
         <div class="form-check mt-2">
           <input id="mostrarMesCompleto" type="checkbox" formControlName="mostrarMesCompleto" class="form-check-input">
           <label for="mostrarMesCompleto" class="form-check-label">Mostrar también cuánto cobraría en un mes completo</label>
@@ -133,20 +134,21 @@ interface SalaryData {
       </div>
 
       <div class="col-md-6">
-        <label class="form-label fw-bold">Horas lectivas semanales (máximo 18 horas)</label>
-        <input type="number" formControlName="horasSemanales" class="form-control shadow-sm" min="1" max="18" placeholder="Ej: 18">
+        <label for="horasSemanales" class="form-label fw-bold">Horas lectivas semanales (máximo 18 horas)</label>
+        <input type="number" id="horasSemanales" formControlName="horasSemanales" class="form-control shadow-sm" min="1" max="18" placeholder="Ej: 18">
       </div>
 
       <div class="col-md-6">
-        <label class="form-label fw-bold">Trienios</label>
-        <input type="number" formControlName="trienios" class="form-control shadow-sm" placeholder="Ej: 2">
+        <label for="trienios" class="form-label fw-bold">Trienios</label>
+        <input type="number" id="trienios" formControlName="trienios" class="form-control shadow-sm" placeholder="Ej: 2">
       </div>
 
       <div class="col-md-6">
-        <label class="form-label fw-bold">Sexenios (Máximo 5)</label>
-        <input type="number" formControlName="sexenios" class="form-control shadow-sm" placeholder="Ej: 1">
+        <label for="sexenios" class="form-label fw-bold">Sexenios (Máximo 5)</label>
+        <input type="number" id="sexenios" formControlName="sexenios" class="form-control shadow-sm" placeholder="Ej: 1">
       </div>
 
+      <div class="col-12 nd-form-section"><h2><span aria-hidden="true">02</span>Contrato y cotización</h2><p>Estas fechas permiten calcular las pagas extras y las vacaciones de todo el contrato.</p></div>
       <div class="col-md-6">
         <label for="fechaInicioContrato" class="form-label fw-bold">Fecha de inicio del contrato</label>
         <input id="fechaInicioContrato" type="date" formControlName="fechaInicioContrato" class="form-control" required>
@@ -162,8 +164,8 @@ interface SalaryData {
         Las vacaciones se calculan automáticamente: 2,5 días por mes completo (proporción en meses incompletos), menos las vacaciones disfrutadas en agosto dentro del contrato, por curso de septiembre a agosto.
       </div>
       <div class="col-md-6">
-        <label class="form-label fw-bold">Régimen de cotización</label>
-        <select formControlName="regimen" class="form-select">
+        <label for="regimen" class="form-label fw-bold">Régimen de cotización</label>
+        <select id="regimen" formControlName="regimen" class="form-select">
           <option value="general">Régimen General — interinos (con desempleo y FP)</option>
           <option value="pasivos">MUFACE y Clases Pasivas</option>
         </select>
@@ -177,11 +179,11 @@ interface SalaryData {
             Reducción de C. Específico por compatibilidad con actividad privada
           </label>
           <div class="mt-3 animate__animated animate__fadeIn" *ngIf="payrollForm.get('compatibilidadPrivada')?.value">
-            <label class="form-label small fw-bold">Reducción mensual a jornada completa según tu resolución (€)</label>
-            <input type="number" formControlName="importeReduccionCompatibilidad" min="0" class="form-control mb-2">
+            <label for="importeReduccionCompatibilidad" class="form-label small fw-bold">Reducción mensual a jornada completa según tu resolución (€)</label>
+            <input type="number" id="importeReduccionCompatibilidad" formControlName="importeReduccionCompatibilidad" min="0" class="form-control mb-2">
             <div class="form-text mb-2">Introduce el importe autorizado. El umbral legal del 30% excluye la antigüedad; no determina por sí solo tu reducción individual.</div>
-            <label class="form-label small fw-bold">Número de días de compatibilización (en el mes)</label>
-            <input type="number" formControlName="diasCompatibilidad" class="form-control shadow-sm w-50" placeholder="Ej: 30">
+            <label for="diasCompatibilidad" class="form-label small fw-bold">Número de días de compatibilización (en el mes)</label>
+            <input type="number" id="diasCompatibilidad" formControlName="diasCompatibilidad" class="form-control shadow-sm" placeholder="Ej: 30">
             <div class="form-text text-info x-small mt-1">
               <i class="bi bi-info-circle me-1"></i> Se aplicará la reducción proporcional al número de días indicados.
             </div>
@@ -189,27 +191,28 @@ interface SalaryData {
         </div>
       </div>
 
+      <div class="col-12 nd-form-section"><h2><span aria-hidden="true">03</span>Cargos y complementos</h2><p>Añade los cargos y conceptos reconocidos en tu nómina.</p></div>
       <!-- Cargos Directivos (Nuevo Bloque) -->
       <div class="col-12">
         <div class="card border-0 bg-light shadow-sm">
           <div class="card-body row g-3">
             <div class="col-12">
-              <label class="form-label fw-bold">Enseñanzas del centro (equipo directivo)</label>
-              <select formControlName="familiaCentro" (change)="onFamiliaChange()" class="form-select">
+              <label for="familiaCentro" class="form-label fw-bold">Enseñanzas del centro (equipo directivo)</label>
+              <select id="familiaCentro" formControlName="familiaCentro" (change)="onFamiliaChange()" class="form-select">
                 <option *ngFor="let f of familiasCentro" [value]="f">{{ f }}</option>
               </select>
               <div class="form-text">Se elige por el centro, independientemente del cuerpo docente.</div>
             </div>
             <div class="col-md-6">
-              <label class="form-label fw-bold">Cargo Directivo</label>
-              <select formControlName="cargoDirectivo" (change)="onCargoChange()" class="form-select border-primary-subtle">
+              <label for="cargoDirectivo" class="form-label fw-bold">Cargo Directivo</label>
+              <select id="cargoDirectivo" formControlName="cargoDirectivo" (change)="onCargoChange()" class="form-select border-primary-subtle">
                 <option value="">Ninguno / Sin cargo directivo</option>
                 <option *ngFor="let c of cargosDirectivos" [value]="c" [disabled]="!cargoDisponible(c)">{{ c }}{{ !cargoDisponible(c) ? ' (no disponible en este tipo)' : '' }}</option>
               </select>
             </div>
             <div class="col-md-6">
-              <label class="form-label fw-bold">Tipo de Centro</label>
-              <select formControlName="tipoCentro" (change)="onTipoChange()" class="form-select border-primary-subtle">
+              <label for="tipoCentro" class="form-label fw-bold">Tipo de Centro</label>
+              <select id="tipoCentro" formControlName="tipoCentro" (change)="onTipoChange()" class="form-select border-primary-subtle">
                 <option value="" disabled>Seleccione...</option>
                 <option *ngFor="let t of tiposCentro" [value]="t">Tipo {{ t }} — {{ descripcionTipo(t) }}</option>
               </select>
@@ -221,7 +224,7 @@ interface SalaryData {
             <!-- Tabla Informativa Cargo Directivo -->
             <div class="col-12 mt-2" *ngIf="selectedCargoAmount() !== null">
               <div class="animate__animated animate__fadeIn">
-                <div class="table-responsive rounded-3 shadow-sm border overflow-hidden">
+                <div class="table-responsive rounded-3 border">
                   <table class="table table-sm table-hover bg-white mb-0">
                     <thead class="table-info text-dark border-0">
                       <tr class="small text-center">
@@ -258,7 +261,7 @@ interface SalaryData {
         </div>
         <div class="input-group shadow-sm mb-3">
           <span class="input-group-text bg-white border-end-0"><i class="bi bi-plus-circle text-primary"></i></span>
-          <select class="form-select border-start-0" (change)="addComplemento($event)" #complementoSelect>
+          <select aria-label="Complemento para añadir" class="form-select border-start-0" (change)="addComplemento($event)" #complementoSelect>
             <option value="" selected>Seleccione un complemento para añadirlo...</option>
             <option *ngFor="let c of otrosCargosKeys" [value]="c" [disabled]="selectedOtros().includes(c)">
               {{ c }} {{ selectedOtros().includes(c) ? '(seleccionado)' : '' }} ({{ complementosData['otros cargos'][c] | currency:'EUR' }})
@@ -280,7 +283,7 @@ interface SalaryData {
             </div>
             <div class="d-flex align-items-center gap-3">
               <span class="text-primary fw-bold">{{ complementosData['otros cargos'][c] | currency:'EUR' }}</span>
-              <button type="button" class="btn btn-outline-danger btn-sm border-0 rounded-circle p-1 leading-none" (click)="removeComplemento(c)">
+              <button type="button" class="btn btn-outline-danger btn-sm border-0 rounded-circle p-1 leading-none" [attr.aria-label]="'Eliminar complemento: ' + c" (click)="removeComplemento(c)">
                 <i class="bi bi-x-circle fs-5"></i>
               </button>
             </div>
@@ -297,11 +300,12 @@ interface SalaryData {
         Para comedor, la guía no define el caso de exactamente 300 comensales; tampoco aclara vicesecretaría con exactamente 1000 alumnos. Consulta esos casos antes de elegir un tramo.
         Selecciona solo complementos compatibles y reconocidos en tu nómina.
       </div>
+      <div class="col-12 nd-form-section"><h2><span aria-hidden="true">04</span>Retención de IRPF</h2><p>Indica el porcentaje que quieres aplicar a la simulación.</p></div>
       <!-- Parámetros Económicos -->
       <div class="col-md-6">
-        <label class="form-label fw-bold">IRPF (%)</label>
+        <label for="irpf" class="form-label fw-bold">IRPF (%)</label>
         <div class="input-group shadow-sm">
-          <input type="number" formControlName="irpf" class="form-control" placeholder="Ej: 15">
+          <input id="irpf" type="number" formControlName="irpf" class="form-control" placeholder="Ej: 20">
           <span class="input-group-text bg-white">%</span>
         </div>
       </div>
@@ -309,52 +313,15 @@ interface SalaryData {
 
 
       <div *ngIf="formError" class="col-12 alert alert-danger" role="alert">{{ formError }}</div>
-      <div class="col-12 mt-5 text-center">
+      <div class="col-12 nd-submit-row">
         <button type="submit" class="btn btn-primary btn-lg px-5 shadow-sm" [disabled]="payrollForm.invalid">
-          <i class="bi bi-calculator me-2"></i>Calcular Nómina
+          <i class="bi bi-calculator me-2"></i>Calcular nómina
         </button>
       </div>
     </form>
   `,
-  styles: `
-    .form-label { margin-bottom: 0.5rem; color: #495057; }
-    .table-responsive { border-color: #dee2e6 !important; }
-    .table th { font-weight: 600; font-size: 0.85rem; }
-    .animate__fadeIn { animation: fadeIn 0.4s ease-in-out; }
-    .animate__fadeInLeft { animation: fadeInLeft 0.3s ease-out; }
-    
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(-5px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-    @keyframes fadeInLeft {
-      from { opacity: 0; transform: translateX(-10px); }
-      to { opacity: 1; transform: translateX(0); }
-    }
+  styles: `:host { display: block; }`
 
-    .input-group-text { border-color: #dee2e6; }
-    .form-control:focus, .form-select:focus {
-      border-color: #0d6efd;
-      box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.1);
-    }
-    
-    .complement-badge {
-      transition: all 0.2s ease;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.02);
-    }
-    .complement-badge:hover {
-      border-color: #0d6efd !important;
-      background-color: #f8fbff !important;
-    }
-    .border-dashed {
-      border-style: dashed !important;
-    }
-    .card.bg-light {
-      background-color: #f8f9fa !important;
-      border: 1px solid #e9ecef !important;
-    }
-    .x-small { font-size: 0.7rem; }
-  `
 })
 export class PayrollForm {
   private fb = inject(FormBuilder);
